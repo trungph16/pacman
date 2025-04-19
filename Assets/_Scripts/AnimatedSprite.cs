@@ -42,4 +42,11 @@ public class AnimatedSprite : MonoBehaviour
             this.spriteRenderer.sprite = this.sprites[this.animationFrame];
         }
     }
+
+    public void Restart()
+    {
+        this.animationFrame = -1;
+
+        Animate();
+    }
 }

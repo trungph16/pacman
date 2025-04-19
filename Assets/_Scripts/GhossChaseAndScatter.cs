@@ -23,16 +23,23 @@ public class GhossChaseAndScatter : GhostBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if(this.ghost.frightened.enabled || !this.enabled)
+        {
+            count = 5;
+            return;
+        }
+
         Node node = other.GetComponent<Node>();
         float distanceToPacman = Vector2.Distance(node.transform.position, pacman.position);
         bool isTargetPacman = true;
-        if (this.enabled && !this.ghost.frightened.enabled && (Vector2)node.transform.position == cornerPosition)
+
+        if (this.enabled && (Vector2)node.transform.position == cornerPosition)
         {
-            Debug.Log("Corner");
             count = 5;
             this.ghost.movement.SetDirection(node.availableDirections[0]);
             return;
-        }   
+        } 
+        
         if (distanceToPacman < panicDistance)
         {
             isTargetPacman = false;
@@ -42,14 +49,14 @@ public class GhossChaseAndScatter : GhostBehaviour
             isTargetPacman = true;
         }
 
-        if (this.enabled && !this.ghost.frightened.enabled && !isTargetPacman)
+        if (this.enabled  && !isTargetPacman)
         {
             this.ghost.movement.SetDirection(-this.ghost.movement.direction);
             count = 0;
             path = HillClimbing(node, isTargetPacman);
         }
 
-        if (node != null && this.enabled && !this.ghost.frightened.enabled && (count == 5 || count == path.Count))
+        if (node != null && this.enabled  && (count == 5 || count == path.Count))
         {
             count = 0;
             path = HillClimbing(node, isTargetPacman);
@@ -58,6 +65,7 @@ public class GhossChaseAndScatter : GhostBehaviour
         if(path[count] == Vector2.zero)
         {
             this.ghost.movement.SetDirection(node.availableDirections[0]);
+            count = 5;
             return;
         }
 

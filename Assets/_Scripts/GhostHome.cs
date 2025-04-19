@@ -20,6 +20,15 @@ public class GhostHome : GhostBehaviour
         }
     }
 
+    private void OnCollisionEnter2D (Collision2D collision)
+    {
+        
+        if (this.enabled && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        {
+            this.ghost.movement.SetDirection(-this.ghost.movement.direction);
+        }
+    }
+
     private IEnumerator ExitTransition()
     {
         this.ghost.movement.SetDirection(Vector2.up, true);
